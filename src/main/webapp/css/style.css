@@ -1,0 +1,121 @@
+body{
+    margin: 0;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    color: black;
+    background-color: cornflowerblue;
+}
+/*AUTH*/
+.auth{
+    width: 260px;
+    padding: 20px;
+    margin: 20px auto;
+    background-color: #be7e7e;
+}
+.auth-title{
+    margin: 0 0 15px;
+    font-size: 20px;
+    color: black;
+    text-align: center;
+}
+/*form-group*/
+.form-group{
+    margin-bottom: 10px;
+}
+/*Input*/
+.input{
+    display: block;
+    padding: 8px 10px;
+    width: 238px;
+    background-color: bisque;
+    border: 1px solid gray;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.5;
+}
+.input:focus{
+    outline: none;
+    border-color: aqua;
+}
+
+/*btn*/
+.btn{
+    display: block;
+    width: 260px;
+    border: none;
+    background-color: blueviolet;
+    padding: 10px;
+    font-family: inherit;
+    font-size: inherit;
+}
+.btn:focus{
+    outline: none;
+    }
+.btn:hover, .btn:focus{
+    background-color: #6f22b5;
+    cursor: pointer;
+}
+.btn:active{
+    background-color: #39115d;
+}
+
+
+.page{
+    width: 800px;
+    margin: 10px auto;
+    background-color: white;
+}
+
+/*Header*/
+.header{
+    padding: 20px;
+    background-color: black;
+}
+.header-title{
+    margin: 0;
+    font-size: 24px;
+    color: white;
+    text-align: center;
+}
+.header-subtitle{
+    margin: 0;
+    font-size: 18px;
+    color:#379feb;
+    text-align: center;
+    font-weight: normal;
+}
+/*Nav*/
+.nav{
+    text-align: center;
+}
+.nav-link{
+    display:inline-block;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: black;
+}
+.nav-link:hover{
+    background-color: gray;
+}
+/*Table*/
+/*table {*/
+/*    border: 1px solid #081a2b;*/
+/*}*/
+/*th {*/
+/*    font-weight: normal;*/
+/*    color: #039;*/
+/*    border-bottom: 1px dashed #121e2a;*/
+/*    padding: 12px 17px;*/
+/*}*/
+/*td {*/
+/*    color: #16162c;*/
+/*    padding: 7px 17px;*/
+/*}*/
+/*tr:hover td {*/
+/*    background: #ccddff;*/
+/*}*/
+
+/*.text:hover::after {*/
+/*    content: attr(data);*/
+/*}*/

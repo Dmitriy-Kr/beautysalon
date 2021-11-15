@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<web-app>
+  <display-name>Beauty Salon</display-name>
+  <context-param>
+    <param-name>db_driver</param-name>
+    <param-value>com.mysql.cj.jdbc.Driver</param-value>
+  </context-param>
+  <context-param>
+    <param-name>db_URL</param-name>
+    <param-value>jdbc:mysql://localhost:3306/beautysalon</param-value>
+  </context-param>
+  <context-param>
+    <param-name>db_user</param-name>
+    <param-value>root</param-value>
+  </context-param>
+  <context-param>
+    <param-name>db_password</param-name>
+    <param-value>K50ABseries</param-value>
+  </context-param>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+  <listener>
+    <listener-class>com.beautysalon.listener.BeautySalonContextListener</listener-class>
+  </listener>
+
+  <filter>
+    <filter-name>SecureFilter</filter-name>
+    <filter-class>com.beautysalon.filter.SecureFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>SecureFilter</filter-name>
+    <url-pattern>/beautysalon/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <servlet>
+    <servlet-name>beautysalon</servlet-name>
+    <servlet-class>com.beautysalon.servlet.BeautySalonServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>beautysalon</servlet-name>
+    <url-pattern>/beautysalon/*</url-pattern>
+  </servlet-mapping>
+</web-app>
