@@ -1,4 +1,4 @@
-package com.beautysalon.listener;
+package com.beautysalon.server.listener;
 
 import com.beautysalon.connectionpool.ConnectionPool;
 

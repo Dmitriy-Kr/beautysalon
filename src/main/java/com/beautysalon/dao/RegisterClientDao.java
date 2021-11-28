@@ -1,12 +1,10 @@
-package com.beautysalon.daodto;
+package com.beautysalon.dao;
 
-import com.beautysalon.dao.DBException;
-import com.beautysalon.entity.Account;
 import com.beautysalon.entity.Client;
 
 import java.sql.*;
 
-public class RegisterClientDao implements BaseDtoDao {
+public class RegisterClientDao extends AbstractDao {
     private static final String SQL_ADD_ACCOUNT =
             "INSERT account(login, password, role_id) VALUE(?, ?, (SELECT `id` FROM `role` WHERE `name` = ?))";
     private static final String SQL_ADD_CLIENT =

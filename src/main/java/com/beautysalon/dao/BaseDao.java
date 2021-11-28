@@ -14,21 +14,4 @@ public interface BaseDao <T extends BaseEntity>{
 //    boolean delete(T t);
 //    boolean delete(long id);
 //    T update(T t);
-
-    default void close(AutoCloseable autoCloseable){
-        if (autoCloseable != null) {
-            try {
-                autoCloseable.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new IllegalStateException("Cannot close " + autoCloseable);
-            }
-        }
-    }
-
-    default Connection getConnection() throws SQLException {
-        Connection connection = null;
-        connection = ConnectionPool.INSTANCE.getConnection();
-        return connection;
-    }
 }

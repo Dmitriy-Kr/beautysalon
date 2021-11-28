@@ -1,19 +1,12 @@
 package com.beautysalon.dao;
 
-import com.beautysalon.connectionpool.ConnectionPool;
-import com.beautysalon.connectionpool.ConnectionWrapper;
 import com.beautysalon.entity.*;
-import com.beautysalon.servlet.BeautySalonServlet;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
-public class ServiceDao implements BaseDao<Service>{
+public class ServiceDao extends AbstractDao implements BaseDao<Service>{
     static final String URL = "jdbc:mysql://localhost:3306/beautysalon";
     static final String SQL_ADD_SERVICE
             = "INSERT service(name, price, spend_time, profession_id) VALUE(?, ?, ?, (SELECT id FROM profession WHERE name = ?))";

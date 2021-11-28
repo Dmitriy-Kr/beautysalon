@@ -1,10 +1,8 @@
 package com.beautysalon.service;
 
 
-import com.beautysalon.dao.AccountDao;
 import com.beautysalon.dao.DBException;
-import com.beautysalon.dao.ServiceDao;
-import com.beautysalon.daodto.ServicePageDtoDao;
+import com.beautysalon.dao.ServicePageDtoDao;
 import com.beautysalon.dto.ServicePageDto;
 
 import java.util.List;

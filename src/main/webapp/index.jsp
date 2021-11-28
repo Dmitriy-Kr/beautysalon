@@ -20,10 +20,16 @@
         <a class="nav-link" href="#">Мастера</a>
         <a class="nav-link" href="login.html">Логин</a>
         <a class="nav-link" href="register.html">Регистрация</a>
+        <c:if test="${sessionScope.secureUser == null}">
+            <a>
+                    GUEST : guest
+            </a>
+        </c:if>
         <c:if test="${sessionScope.secureUser != null}">
             <a>
                     ${sessionScope.secureUser.role} : ${sessionScope.secureUser.login}
             </a>
+            <a class="nav-link" href="#">Выход</a>
         </c:if>
     </div>
 </div>

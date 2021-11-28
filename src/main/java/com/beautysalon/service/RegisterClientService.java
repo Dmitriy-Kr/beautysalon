@@ -2,12 +2,8 @@ package com.beautysalon.service;
 
 
 import com.beautysalon.dao.DBException;
-import com.beautysalon.daodto.RegisterClientDao;
-import com.beautysalon.daodto.ServicePageDtoDao;
-import com.beautysalon.dto.ServicePageDto;
+import com.beautysalon.dao.RegisterClientDao;
 import com.beautysalon.entity.Client;
-
-import java.util.List;
 
 public class RegisterClientService {
 

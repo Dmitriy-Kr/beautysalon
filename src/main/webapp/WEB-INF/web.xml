@@ -22,12 +22,12 @@
   </welcome-file-list>
 
   <listener>
-    <listener-class>com.beautysalon.listener.BeautySalonContextListener</listener-class>
+    <listener-class>com.beautysalon.server.listener.BeautySalonContextListener</listener-class>
   </listener>
 
   <filter>
     <filter-name>SecureFilter</filter-name>
-    <filter-class>com.beautysalon.filter.SecureFilter</filter-class>
+    <filter-class>com.beautysalon.server.filter.SecureFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>SecureFilter</filter-name>
@@ -38,7 +38,7 @@
 
   <servlet>
     <servlet-name>beautysalon</servlet-name>
-    <servlet-class>com.beautysalon.servlet.BeautySalonServlet</servlet-class>
+    <servlet-class>com.beautysalon.server.servlet.BeautySalonServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>beautysalon</servlet-name>

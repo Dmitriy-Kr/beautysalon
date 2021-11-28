@@ -1,13 +1,15 @@
-package com.beautysalon.daodto;
+package com.beautysalon.dao;
 
-import com.beautysalon.dao.DBException;
 import com.beautysalon.dto.ServicePageDto;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServicePageDtoDao implements BaseDtoDao {
+public class ServicePageDtoDao extends AbstractDao {
     private static final String SQL_FIND_SERVICE_EMPLOYEE_ALL =
             "SELECT service.name, service.price, employee.name, employee.surname, employee.rating " +
                     "FROM service JOIN profession ON profession.id = service.profession_id " +

@@ -4,9 +4,7 @@ import com.beautysalon.entity.Account;
 import com.beautysalon.entity.Client;
 import com.beautysalon.entity.Role;
 import com.beautysalon.entity.RoleEnum;
-import com.beautysalon.security.SecureRole;
 import com.beautysalon.security.SecureUser;
-import com.beautysalon.service.AccountService;
 import com.beautysalon.service.RegisterClientService;
 import com.beautysalon.service.ServiceException;
 
@@ -41,7 +39,7 @@ public class RegisterController implements Controller {
         RegisterClientService registerClientService = new RegisterClientService();
         Client client = new Client();
         client.setAccount(new Account());
-        client.getAccount().setLogin(login).setPassword(password).setRole(new Role(RoleEnum.CLIENT));
+        client.getAccount().setLogin(login).setPassword(password).setRole(new Role(com.beautysalon.entity.RoleEnum.CLIENT));
         client.setName(name).setSurname(surname);
 
         try {
@@ -53,7 +51,7 @@ public class RegisterController implements Controller {
 
         if (isCreated) {
             request.getSession(true)
-                    .setAttribute("secureUser", new SecureUser().setLogin(login).setRole(SecureRole.CLIENT));
+                    .setAttribute("secureUser", new SecureUser().setLogin(login).setRole(RoleEnum.CLIENT));
             return "/WEB-INF/jsp/successfulregister.jsp";
         }
         return "/WEB-INF/jsp/error.jsp";

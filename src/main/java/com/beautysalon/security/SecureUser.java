@@ -1,5 +1,6 @@
 package com.beautysalon.security;
 
+import com.beautysalon.entity.RoleEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -9,5 +10,5 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class SecureUser {
     private String login;
-    private SecureRole role;
+    private RoleEnum role;
 }

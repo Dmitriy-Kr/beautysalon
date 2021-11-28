@@ -1,5 +1,5 @@
 package com.beautysalon.entity;
 
 public enum RoleEnum {
-    ADMIN, EMPLOYEE, CLIENT;
+    ADMIN, EMPLOYEE, CLIENT, GUEST;
 }

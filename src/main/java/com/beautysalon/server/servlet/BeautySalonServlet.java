@@ -1,4 +1,4 @@
-package com.beautysalon.servlet;
+package com.beautysalon.server.servlet;
 
 import com.beautysalon.controller.Controller;
 import com.beautysalon.controller.ControllerFactory;

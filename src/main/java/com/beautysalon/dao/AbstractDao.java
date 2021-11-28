@@ -1,13 +1,15 @@
-package com.beautysalon.daodto;
+package com.beautysalon.dao;
 
 import com.beautysalon.connectionpool.ConnectionPool;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public interface BaseDtoDao{
-
-    default void close(AutoCloseable autoCloseable){
+/**
+ * The class AstractDao contains simple basic methods for working with DB
+ */
+public abstract class AbstractDao {
+    void close(AutoCloseable autoCloseable){
         if (autoCloseable != null) {
             try {
                 autoCloseable.close();
@@ -18,7 +20,7 @@ public interface BaseDtoDao{
         }
     }
 
-    default void closeConnectionWithCommitTrue(Connection connection){
+    void closeConnectionWithCommitTrue(Connection connection){
         if (connection != null) {
             try {
                 connection.setAutoCommit(true);
@@ -30,7 +32,7 @@ public interface BaseDtoDao{
         }
     }
 
-    default Connection getConnection() throws SQLException {
+    Connection getConnection() throws SQLException {
         Connection connection = null;
         connection = ConnectionPool.INSTANCE.getConnection();
         return connection;
