@@ -8,8 +8,10 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 public class ServicePageDto extends BaseDto{
-    String ServiceName;
+    long serviceId;
+    String serviceName;
     Double price;
+    long employeeId;
     String employeeName;
     String employeeSurname;
     Double employeeRating;

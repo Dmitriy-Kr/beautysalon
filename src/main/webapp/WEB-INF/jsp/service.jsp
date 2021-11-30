@@ -32,13 +32,20 @@
                         </a>
                     </td>
                     <td>${service.employeeRating}</td>
-                    <td>Заказать услугу</td>
+                    <c:if test="${sessionScope.secureUser.role == 'CLIENT'}">
+                        <td>
+                            <a title="Заказать услугу" href="/beautysalon/order?service_id=${service.serviceId}&employee_id=${service.employeeId}">
+                            Заказать услугу
+                            </a>
+                        </td>
+                    </c:if>
+
                 </tr>
             </c:forEach>
         </c:if>
 
         <c:if test="${sessionScope.isFilteredServiceList}">
-            <c:forEach var="service" items="${sessionScope.serviceList}">
+            <c:forEach var="service" items="${sessionScope.serviceListFiltered}">
                 <tr>
                     <td>
                         ${service.serviceName}
@@ -49,7 +56,13 @@
                             <p>${service.employeeSurname}</p>
                     </td>
                     <td>${service.employeeRating}</td>
-                    <td>Заказать услугу</td>
+                    <c:if test="${sessionScope.secureUser.role == 'CLIENT'}">
+                        <td>
+                            <a title="Заказать услугу" href="/beautysalon/order?service_id=${service.serviceId}&employee_id=${service.employeeId}">
+                                Заказать услугу
+                            </a>
+                        </td>
+                    </c:if>
                 </tr>
             </c:forEach>
         </c:if>

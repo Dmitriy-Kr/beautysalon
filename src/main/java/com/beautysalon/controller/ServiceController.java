@@ -19,10 +19,23 @@ public class ServiceController implements Controller {
         SalonService salonService = new SalonService();
         HttpSession session = null;
         List<ServicePageDto> serviceList = null;
+        List<ServicePageDto> serviceListFiltered = null;
         String sort = request.getParameter("sort");
         String filter = request.getParameter("filter");
         boolean isFilteredServiceList = false;
         boolean firstVisitOrRefresh = sort == null && filter == null;
+
+        session = request.getSession(false);
+
+        if (session == null) {
+            try {
+                request.getRequestDispatcher("error.jsp").forward(request, response);
+            } catch (ServletException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         if (firstVisitOrRefresh) {
             try {
@@ -31,20 +44,8 @@ public class ServiceController implements Controller {
                 e.printStackTrace();
             }
             serviceList.sort((o1, o2) -> o1.getServiceName().compareTo(o2.getServiceName()));
+            session.setAttribute("serviceList", serviceList);
         } else {
-
-            session = request.getSession(false);
-
-            if (session == null) {
-                try {
-                    request.getRequestDispatcher("error.jsp").forward(request, response);
-                } catch (ServletException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
             serviceList = (List<ServicePageDto>) session.getAttribute("serviceList");
 
             if (sort != null) {
@@ -55,12 +56,13 @@ public class ServiceController implements Controller {
                 if (sort.equalsIgnoreCase("rating")) {
                     serviceList.sort((o1, o2) -> Double.compare(o2.getEmployeeRating(), o1.getEmployeeRating()));
                 }
+                session.setAttribute("serviceList", serviceList);
             }
 
             if (filter != null) {
                 if (filter.equals("service")) {
                     String serviceName = request.getParameter("name");
-                    serviceList = serviceList.stream()
+                    serviceListFiltered = serviceList.stream()
                             .filter(servicePageDto -> servicePageDto.getServiceName().equals(serviceName))
                             .collect(Collectors.toList());
                 }
@@ -68,12 +70,13 @@ public class ServiceController implements Controller {
                 if (filter.equals("employee")) {
                     String employeeName = request.getParameter("name");
                     String employeeSurname = request.getParameter("surname");
-                    serviceList = serviceList.stream()
+                    serviceListFiltered = serviceList.stream()
                             .filter(servicePageDto -> servicePageDto.getEmployeeName().equals(employeeName)
                                     && servicePageDto.getEmployeeSurname().equals(employeeSurname))
                             .collect(Collectors.toList());
                 }
                 isFilteredServiceList = true;
+                session.setAttribute("serviceListFiltered", serviceListFiltered);
             }
         }
 
@@ -81,7 +84,6 @@ public class ServiceController implements Controller {
             session = request.getSession(true);
         }
 
-        session.setAttribute("serviceList", serviceList);
         session.setAttribute("isFilteredServiceList", isFilteredServiceList);
         return "/WEB-INF/jsp/service.jsp";
     }

@@ -22,6 +22,7 @@ public class SecureFilter implements Filter {
         accessMap.put("/login", Set.of(RoleEnum.values()));
         accessMap.put("/service", Set.of(RoleEnum.values()));
         accessMap.put("/register", Set.of(RoleEnum.values()));
+        accessMap.put("/order", Set.of(RoleEnum.CLIENT));
         Filter.super.init(filterConfig);
     }
 
@@ -37,6 +38,7 @@ public class SecureFilter implements Filter {
 
         if (secureUser == null) {
             secureUser = new SecureUser().setLogin("guest").setRole(RoleEnum.GUEST);
+            httpSession.setAttribute("secureUser", secureUser);
         }
 
         System.out.println("Filter: " + path);

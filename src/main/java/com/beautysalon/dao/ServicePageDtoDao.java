@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ServicePageDtoDao extends AbstractDao {
     private static final String SQL_FIND_SERVICE_EMPLOYEE_ALL =
-            "SELECT service.name, service.price, employee.name, employee.surname, employee.rating " +
+            "SELECT service.id, service.name, service.price, employee.id, employee.name, employee.surname, employee.rating " +
                     "FROM service JOIN profession ON profession.id = service.profession_id " +
                     "JOIN employee ON employee.profession_id = profession.id";
 
@@ -28,8 +28,10 @@ public class ServicePageDtoDao extends AbstractDao {
 
             while (resultSet.next()){
                 ServicePageDto resultService = new ServicePageDto();
+                resultService.setServiceId(resultSet.getLong("service.id"));
                 resultService.setServiceName(resultSet.getString("service.name"));
                 resultService.setPrice(resultSet.getDouble("service.price"));
+                resultService.setEmployeeId(resultSet.getLong("employee.id"));
                 resultService.setEmployeeName(resultSet.getString("employee.name"));
                 resultService.setEmployeeSurname(resultSet.getString("employee.surname"));
                 resultService.setEmployeeRating(resultSet.getDouble("employee.rating"));
