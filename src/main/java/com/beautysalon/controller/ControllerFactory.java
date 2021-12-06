@@ -12,6 +12,7 @@ public class ControllerFactory {
         controllerMap.put("GET/order", new ShowPageController("/WEB-INF/jsp/order.jsp"));
         controllerMap.put("POST/login", new LoginController());
         controllerMap.put("POST/register", new RegisterController());
+        controllerMap.put("POST/order", new OrderController());
     }
 
     public Controller getController(String address){

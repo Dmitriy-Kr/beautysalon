@@ -36,7 +36,11 @@ public class LoginController implements Controller {
         if (account.getLogin().equals(login) && account.getPassword().equals(password)) {
             System.out.println("account role: " + account.getRole().getName().toString());
             request.getSession(true)
-                    .setAttribute("secureUser", new SecureUser().setLogin(login).setRole(account.getRole().getName()));
+                    .setAttribute("secureUser",
+                            new SecureUser()
+                                    .setLogin(login)
+                                    .setRole(account.getRole().getName())
+                                    .setAccountId(account.getId()));
 
             request.setAttribute("account", account);
             System.out.println("Account: " + account.getLogin() + "  " + account.getPassword());
