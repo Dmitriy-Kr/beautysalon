@@ -16,6 +16,11 @@ public class Employee extends BaseEntity{
     private Account account;
     private Profession profession;
 
+    public Employee setId(long Id) {
+        super.setId(Id);
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Employee{" +

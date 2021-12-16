@@ -12,6 +12,11 @@ public class Client extends BaseEntity{
     private String surname;
     private Account account;
 
+    public Client setId(long Id) {
+        super.setId(Id);
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Client{" +

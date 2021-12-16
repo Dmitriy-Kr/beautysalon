@@ -30,7 +30,7 @@ public class LoginController implements Controller {
             account = accountService.findByValue(login);
         } catch (ServiceException e) {
             e.printStackTrace();
-            return "error.jsp";
+            return "/WEB-INF/jsp/error.jsp";
         }
 
         if (account.getLogin().equals(login) && account.getPassword().equals(password)) {

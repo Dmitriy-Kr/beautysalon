@@ -24,7 +24,7 @@ public class AccountDao extends AbstractDao implements BaseDao<Account> {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        boolean flag = false;
+        boolean isCreated = false;
 
         try {
             connection = getConnection();
@@ -37,7 +37,7 @@ public class AccountDao extends AbstractDao implements BaseDao<Account> {
                 resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
                     account.setId(resultSet.getLong(1));
-                    flag = true;
+                    isCreated = true;
                 }
             }
         } catch (SQLException e) {
@@ -48,7 +48,7 @@ public class AccountDao extends AbstractDao implements BaseDao<Account> {
             close(preparedStatement);
             close(connection);
         }
-        return flag;
+        return isCreated;
     }
 
     public void update(Account account) throws DBException {

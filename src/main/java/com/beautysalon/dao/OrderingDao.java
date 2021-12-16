@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
 
-public class OrderingDao {
+public class OrderingDao extends AbstractDao implements BaseDao<Ordering>{
     static final String URL = "jdbc:mysql://localhost:3306/beautysalon";
     static final String SQL_ADD_ORDERING
             = "INSERT ordering(ordering_date_time, status, service_id, employee_id, client_id) " +
@@ -29,10 +29,11 @@ public class OrderingDao {
     static final String SQL_UPDATE_ORDERING
             = "UPDATE ordering SET ordering_date_time = ?, status = ? WHERE id = ?";
 
-    public void create(Ordering ordering) throws DBException {
+    public boolean create(Ordering ordering) throws DBException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        boolean isCreated = false;
 
         try {
             connection = getConnection();
@@ -47,36 +48,18 @@ public class OrderingDao {
                 resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
                     ordering.setId(resultSet.getLong(1));
+                    isCreated = true;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DBException("Failed to connect table ordering");
         } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            close(resultSet);
+            close(preparedStatement);
+            close(connection);
         }
+        return isCreated;
     }
 
     public void update(Ordering ordering) throws DBException {
@@ -95,22 +78,8 @@ public class OrderingDao {
             e.printStackTrace();
             throw new DBException("Failed to connect table ordering");
         } finally {
-
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            close(preparedStatement);
+            close(connection);
         }
     }
 
@@ -127,21 +96,8 @@ public class OrderingDao {
             e.printStackTrace();
             throw new DBException("Failed to connect table ordering");
         } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            close(preparedStatement);
+            close(connection);
         }
     }
 
@@ -188,41 +144,10 @@ public class OrderingDao {
             e.printStackTrace();
             throw new DBException("Failed to connect table ordering");
         } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            close(resultSet);
+            close(preparedStatement);
+            close(connection);
         }
         return resultOrdering;
     }
-
-    public static Connection getConnection() throws SQLException {
-        Properties properties = new Properties();
-        try {
-            properties.load(new FileReader(new File("db.properties")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return DriverManager.getConnection(URL, properties);
-    }
-
 }

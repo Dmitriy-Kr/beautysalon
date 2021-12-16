@@ -15,6 +15,11 @@ public class Account extends BaseEntity{
     private Role role;
     private LocalDateTime createTime;
 
+    public Account setId(long Id) {
+        super.setId(Id);
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Account{" +

@@ -15,6 +15,11 @@ public class Service extends BaseEntity{
     private Time spendTime;
     private Profession profession;
 
+    public Service setId(long Id) {
+        super.setId(Id);
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Service{" +
