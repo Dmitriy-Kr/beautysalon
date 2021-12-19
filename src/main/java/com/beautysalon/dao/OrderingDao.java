@@ -9,7 +9,6 @@ import java.sql.*;
 import java.util.Properties;
 
 public class OrderingDao extends AbstractDao implements BaseDao<Ordering>{
-    static final String URL = "jdbc:mysql://localhost:3306/beautysalon";
     static final String SQL_ADD_ORDERING
             = "INSERT ordering(ordering_date_time, status, service_id, employee_id, client_id) " +
             "VALUE(?, ?, ?, ?, ?)";

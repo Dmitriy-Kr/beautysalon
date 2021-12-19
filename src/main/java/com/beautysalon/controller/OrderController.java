@@ -2,6 +2,7 @@ package com.beautysalon.controller;
 
 import com.beautysalon.entity.*;
 import com.beautysalon.security.SecureUser;
+import com.beautysalon.service.ClientService;
 import com.beautysalon.service.OrderingService;
 import com.beautysalon.service.ServiceException;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 
 public class OrderController implements Controller {
     private OrderingService orderingService = new OrderingService();
+    private ClientService clientService = new ClientService();
     private Ordering ordering;
 
     @Override
@@ -26,7 +28,12 @@ public class OrderController implements Controller {
         SecureUser secureUser = (SecureUser) httpSession.getAttribute("secureUser");
         long clientId = 0;
         if (secureUser.getRole().equals(RoleEnum.CLIENT)) {
-            clientId = secureUser.getAccountId();
+            try {
+                clientId = clientService.findClientIdByAccountLogin(secureUser.getLogin());
+            } catch (ServiceException e) {
+                e.printStackTrace();
+                return "/WEB-INF/jsp/error.jsp";
+            }
         } else {
             System.out.println("OrderController secureUser role: " + secureUser.getRole());
             return "/WEB-INF/jsp/error.jsp";
@@ -60,7 +67,7 @@ public class OrderController implements Controller {
                                     long employeeId,
                                     long clientId) {
 
-        return new Ordering().setCreateTime(localDateTime)
+        return new Ordering().setOrderDateTime(localDateTime)
                 .setService(new Service().setId(serviceId))
                 .setEmployee(new Employee().setId(employeeId))
                 .setClient(new Client().setId(clientId))

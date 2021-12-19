@@ -5,7 +5,7 @@ import com.beautysalon.entity.Client;
 import com.beautysalon.entity.Role;
 import com.beautysalon.entity.RoleEnum;
 import com.beautysalon.security.SecureUser;
-import com.beautysalon.service.RegisterClientService;
+import com.beautysalon.service.ClientService;
 import com.beautysalon.service.ServiceException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,14 +36,14 @@ public class RegisterController implements Controller {
             return "/register.html";
         }
 
-        RegisterClientService registerClientService = new RegisterClientService();
+        ClientService clientService = new ClientService();
         Client client = new Client();
         client.setAccount(new Account());
         client.getAccount().setLogin(login).setPassword(password).setRole(new Role(com.beautysalon.entity.RoleEnum.CLIENT));
         client.setName(name).setSurname(surname);
 
         try {
-            isCreated = registerClientService.create(client);
+            isCreated = clientService.createClientAndAccount(client);
         } catch (ServiceException e) {
             e.printStackTrace();
             return "/WEB-INF/jsp/error.jsp";

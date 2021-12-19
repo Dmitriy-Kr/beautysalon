@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Услуги</title>
     <link rel="stylesheet" href="../../css/style.css">
 </head>
@@ -27,19 +28,24 @@
             <table>
                 <tr>
                     <td>Дата</td>
-                    <td>${account.login}</td>
+                    <td>${requestScope.ordering.orderDateTime.dayOfMonth}
+                        .${requestScope.ordering.orderDateTime.month.value}
+                        .${requestScope.ordering.orderDateTime.year}
+                    </td>
                 </tr>
                 <tr>
-                    <td>password</td>
-                    <td>${account.password}</td>
+                    <td>Время</td>
+                    <td>${requestScope.ordering.orderDateTime.hour}
+                        :${requestScope.ordering.orderDateTime.minute}
+                    </td>
                 </tr>
                 <tr>
-                    <td>role</td>
-                    <td>${account.role.name}</td>
+                    <td>Присвоенный ID</td>
+                    <td>${requestScope.ordering.id}</td>
                 </tr>
                 <tr>
-                    <td>id</td>
-                    <td>${account.id}</td>
+                    <td>Статус</td>
+                    <td>${requestScope.ordering.status}</td>
                 </tr>
             </table>
         </div>

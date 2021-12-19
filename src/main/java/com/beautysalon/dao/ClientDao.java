@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
 
-public class ClientDao {
-    static final String URL = "jdbc:mysql://localhost:3306/beautysalon";
+public class ClientDao extends AbstractDao implements BaseDao<Client>{
     static final String SQL_ADD_CLIENT
             = "INSERT client(name, surname, account_id) VALUE(?, ?, (SELECT id FROM account WHERE login = ?))";
     static final String SQL_DELETE_CLIENT = "DELETE FROM client WHERE id = ?";
@@ -18,11 +17,18 @@ public class ClientDao {
                     " JOIN account ON account.id = client.account_id " +
                     "JOIN role ON role.id = account.role_id WHERE client.id = ?";
     static final String SQL_UPDATE_CLIENT = "UPDATE client SET name = ?, surname = ? WHERE id = ?";
+    static final String SQL_FIND_CLIENT_ID_BY_ACCOUNT_LOGIN =
+            "SELECT client.id FROM client WHERE account_id = (SELECT account.id FROM account WHERE account.login = ?)";
+    private static final String SQL_ADD_ACCOUNT =
+            "INSERT account(login, password, role_id) VALUE(?, ?, (SELECT `id` FROM `role` WHERE `name` = ?))";
+    private static final String SQL_ADD_CLIENT_AFTER_ACCOUNT =
+            "INSERT client(account_id, name, surname) VALUE(?, ?, ?);";
 
-    public void create(Client client) throws DBException {
+    public boolean create(Client client) throws DBException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        boolean isCreated = false;
 
         try {
             connection = getConnection();
@@ -35,36 +41,72 @@ public class ClientDao {
                 resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
                     client.setId(resultSet.getLong(1));
+                    isCreated = true;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DBException("Failed to connect table client");
         } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            close(resultSet);
+            close(preparedStatement);
+            close(connection);
         }
+        return isCreated;
+    }
+
+    public boolean createClientAndAccount(Client client) throws DBException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        boolean flag = false;
+
+        try {
+            connection = getConnection();
+            connection.setAutoCommit(false);
+            preparedStatement = connection.prepareStatement(SQL_ADD_ACCOUNT, Statement.RETURN_GENERATED_KEYS);
+
+            int i = 1;
+            preparedStatement.setString(i++, client.getAccount().getLogin());
+            preparedStatement.setString(i++, client.getAccount().getPassword());
+            preparedStatement.setString(i++, client.getAccount().getRole().getName().toString());
+
+            if (preparedStatement.executeUpdate() > 0) {
+                resultSet = preparedStatement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    client.getAccount().setId(resultSet.getLong(1));
+                }
+            }
+
+            preparedStatement = connection.prepareStatement(SQL_ADD_CLIENT_AFTER_ACCOUNT, Statement.RETURN_GENERATED_KEYS);
+
+            i = 1;
+            preparedStatement.setLong(i++, client.getAccount().getId());
+            preparedStatement.setString(i++, client.getName());
+            preparedStatement.setString(i++, client.getSurname());
+
+            if (preparedStatement.executeUpdate() > 0) {
+                resultSet = preparedStatement.getGeneratedKeys();
+                if (resultSet.next()) {
+                    client.setId(resultSet.getLong(1));
+                    flag = true;
+                }
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+            throw new DBException("Failed to connect table account");
+        } finally {
+            close(resultSet);
+            close(preparedStatement);
+            closeConnectionWithCommitTrue(connection);
+        }
+        return flag;
     }
 
     public void update(Client client) throws DBException {
@@ -83,22 +125,8 @@ public class ClientDao {
             e.printStackTrace();
             throw new DBException("Failed to connect table client");
         } finally {
-
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            close(preparedStatement);
+            close(connection);
         }
     }
 
@@ -115,21 +143,8 @@ public class ClientDao {
             e.printStackTrace();
             throw new DBException("Failed to connect table client");
         } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            close(preparedStatement);
+            close(connection);
         }
     }
 
@@ -164,40 +179,37 @@ public class ClientDao {
             e.printStackTrace();
             throw new DBException("Failed to connect table client");
         } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            close(resultSet);
+            close(preparedStatement);
+            close(connection);
         }
         return resultClient;
     }
 
-    public static Connection getConnection() throws SQLException {
-        Properties properties = new Properties();
+    public long findClientIdByAccountLogin(String login) throws DBException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        long clientId = 0;
+
         try {
-            properties.load(new FileReader(new File("db.properties")));
-        } catch (IOException e) {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(SQL_FIND_CLIENT_ID_BY_ACCOUNT_LOGIN);
+            preparedStatement.setString(1, login);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                clientId = resultSet.getLong("id");
+            }
+
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new DBException("Failed to connect table client");
+        } finally {
+            close(resultSet);
+            close(preparedStatement);
+            close(connection);
         }
-        return DriverManager.getConnection(URL, properties);
+        return clientId;
     }
 }
