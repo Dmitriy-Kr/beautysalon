@@ -1,14 +1,22 @@
 package com.beautysalon.controller;
 
 import com.beautysalon.entity.Account;
+import com.beautysalon.entity.RoleEnum;
 import com.beautysalon.security.SecureUser;
 import com.beautysalon.service.AccountService;
 import com.beautysalon.service.ServiceException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 public class LoginController implements Controller {
+    private Map<RoleEnum, String> userURL = Map.of(
+            RoleEnum.GUEST, "/index.jsp",
+            RoleEnum.CLIENT, "/WEB-INF/jsp/account.jsp",
+            RoleEnum.EMPLOYEE, "/WEB-INF/jsp/account.jsp",
+            RoleEnum.ADMIN, "/WEB-INF/jsp/adminpage.jsp");
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String login = request.getParameter("login");
@@ -44,7 +52,8 @@ public class LoginController implements Controller {
 
             request.setAttribute("account", account);
             System.out.println("Account: " + account.getLogin() + "  " + account.getPassword());
-            return "/WEB-INF/jsp/account.jsp";
+
+            return userURL.get(account.getRole().getName());
         }
         return "/WEB-INF/jsp/error.jsp";
     }

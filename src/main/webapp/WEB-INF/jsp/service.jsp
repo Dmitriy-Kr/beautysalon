@@ -59,7 +59,6 @@
                     <td>${service.employeeRating}</td>
                     <c:if test="${sessionScope.secureUser.role == 'CLIENT'}">
                         <td>
-<%--                            <a title="Заказать услугу" href="/beautysalon/order?service_id=${service.serviceId}&employee_id=${service.employeeId}">--%>
                             <a title="Заказать услугу" href="/beautysalon/order?note_number=${sessionScope.serviceList.indexOf(service)}">
                                 Заказать услугу
                             </a>

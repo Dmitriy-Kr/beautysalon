@@ -14,7 +14,7 @@ import java.util.Set;
 
 //@WebFilter("/beautysalon/*")
 public class SecureFilter implements Filter {
-    Map<String, Set<RoleEnum>>  accessMap;
+    Map<String, Set<RoleEnum>> accessMap;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -43,10 +43,16 @@ public class SecureFilter implements Filter {
 
         System.out.println("Filter: " + path);
 
-        if (accessMap.get(path).contains(secureUser.getRole())) {
-            filterChain.doFilter(servletRequest, servletResponse);
+        if ("/logout".equals(path)) {
+            httpSession.invalidate();
+            httpServletResponse.sendRedirect("/index.jsp");
+            System.out.println("After sendredirect");
         } else {
-            httpServletResponse.sendRedirect("login");
+            if (accessMap.get(path).contains(secureUser.getRole())) {
+                filterChain.doFilter(servletRequest, servletResponse);
+            } else {
+                httpServletResponse.sendRedirect("login");
+            }
         }
 
     }

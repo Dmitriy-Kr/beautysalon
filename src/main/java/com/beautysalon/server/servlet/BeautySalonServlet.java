@@ -23,7 +23,7 @@ public class BeautySalonServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
         if(pathInfo == null) {
-            resp.sendRedirect("beautysalon/main");
+            resp.sendRedirect("/index.jsp");
         }
         System.out.println("RequestURI: " + req.getRequestURI());
         Controller controller = controllerFactory.getController(req.getMethod() + pathInfo);
