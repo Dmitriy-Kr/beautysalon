@@ -15,7 +15,7 @@ public class SalonService{
             return serviceDao.findAll();
         } catch (DBException e) {
             e.printStackTrace();
-            throw new ServiceException("failed to read from database");
+            throw new ServiceException("Failed to read from database");
         }
     }
 }

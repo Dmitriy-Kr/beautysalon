@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceDao extends AbstractDao implements BaseDao<Service>{
-    static final String URL = "jdbc:mysql://localhost:3306/beautysalon";
     static final String SQL_ADD_SERVICE
             = "INSERT service(name, price, spend_time, profession_id) VALUE(?, ?, ?, (SELECT id FROM profession WHERE name = ?))";
     static final String SQL_DELETE_SERVICE = "DELETE FROM service WHERE id = ?";
@@ -128,24 +127,24 @@ public class ServiceDao extends AbstractDao implements BaseDao<Service>{
 
     public List<Service> findAll() throws DBException {
         Connection connection = null;
-        PreparedStatement preparedStatement = null;
+        Statement statement = null;
         ResultSet resultSet = null;
         List<Service> resultList = new ArrayList<>();
 
         try {
             connection = getConnection();
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             resultSet = statement.executeQuery(SQL_FIND_SERVICE_ALL);
 
             while (resultSet.next()){
-                Service resultService = new Service().setProfession(new Profession());
-                resultService.setName(resultSet.getString("service.name"));
-                resultService.setPrice(resultSet.getDouble("price"));
-                resultService.setSpendTime(resultSet.getTime("spend_time"));
-                resultService.getProfession().setName(resultSet.getString("profession.name"));
-                resultService.setId(resultSet.getLong("service.id"));
-                resultService.getProfession().setId(resultSet.getLong("profession.id"));
-                resultList.add(resultService);
+                Service service = new Service().setProfession(new Profession());
+                service.setName(resultSet.getString("service.name"));
+                service.setPrice(resultSet.getDouble("price"));
+                service.setSpendTime(resultSet.getTime("spend_time"));
+                service.getProfession().setName(resultSet.getString("profession.name"));
+                service.setId(resultSet.getLong("service.id"));
+                service.getProfession().setId(resultSet.getLong("profession.id"));
+                resultList.add(service);
             }
 
         } catch (SQLException e) {
@@ -153,18 +152,9 @@ public class ServiceDao extends AbstractDao implements BaseDao<Service>{
             throw new DBException("Failed to connect table service");
         } finally {
             close(resultSet);
-            close(preparedStatement);
+            close(statement);
             close(connection);
         }
         return resultList;
     }
-
-//    public static Connection getConnection() throws SQLException {
-//        Connection connection = null;
-//        connection = ConnectionPool.INSTANCE.getConnection();
-////        System.out.println("instance: " + ((ConnectionWrapper)connection).instance);
-////        System.out.println("inst: " + ((ConnectionWrapper)connection).inst);
-//        return connection;
-//    }
-
 }

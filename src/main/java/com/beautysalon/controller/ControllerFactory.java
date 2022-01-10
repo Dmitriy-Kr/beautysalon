@@ -9,6 +9,7 @@ public class ControllerFactory {
     {
         controllerMap.put("GET/login", new ShowPageController("/login.html"));
         controllerMap.put("GET/service", new ServiceController());
+        controllerMap.put("GET/orderings", new OrderingsController());
         controllerMap.put("GET/order", new ShowPageController("/WEB-INF/jsp/order.jsp"));
         controllerMap.put("POST/login", new LoginController());
         controllerMap.put("POST/register", new RegisterController());

@@ -23,6 +23,7 @@ public class SecureFilter implements Filter {
         accessMap.put("/service", Set.of(RoleEnum.values()));
         accessMap.put("/register", Set.of(RoleEnum.values()));
         accessMap.put("/order", Set.of(RoleEnum.CLIENT));
+        accessMap.put("/orderings", Set.of(RoleEnum.ADMIN));
         Filter.super.init(filterConfig);
     }
 

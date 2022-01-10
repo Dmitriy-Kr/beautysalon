@@ -2,17 +2,26 @@ package com.beautysalon.dao;
 
 import com.beautysalon.entity.*;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.*;
-import java.util.Properties;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderingDao extends AbstractDao implements BaseDao<Ordering>{
     static final String SQL_ADD_ORDERING
             = "INSERT ordering(ordering_date_time, status, service_id, employee_id, client_id) " +
             "VALUE(?, ?, ?, ?, ?)";
     static final String SQL_DELETE_ORDERING = "DELETE FROM ordering WHERE id = ?";
+    static final String SQL_FIND_ORDERING_ALL =
+            "SELECT ordering.id, ordering_date_time, status, service_id, employee_id, client_id, create_time, " +
+            "update_time, service.name, service.price, service.spend_time," +
+            "employee.name, employee.surname, employee.rating, employee.profession_id, " +
+            "profession.name, " +
+            "client.name, client.surname " +
+            "FROM ordering " +
+            "JOIN service ON service.id = ordering.service_id " +
+            "JOIN employee ON employee.id = ordering.employee_id " +
+            "JOIN client ON client.id = ordering.client_id " +
+            "JOIN profession ON profession.id = employee.profession_id";
     static final String SQL_FIND_ORDERING_BY_ID =
             "SELECT ordering_date_time, status, service_id, employee_id, client_id, create_time, update_time," +
                     "service.name, service.price, service.spend_time," +
@@ -148,5 +157,55 @@ public class OrderingDao extends AbstractDao implements BaseDao<Ordering>{
             close(connection);
         }
         return resultOrdering;
+    }
+
+    public List<Ordering> findAll() throws DBException {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        List<Ordering> resultOrderings = new ArrayList<>();
+
+        try {
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(SQL_FIND_ORDERING_ALL);
+
+            while (resultSet.next()){
+                Ordering ordering = new Ordering();
+                ordering.setService(new Service());
+                ordering.setEmployee(new Employee());
+                ordering.setClient(new Client());
+                ordering.getEmployee().setProfession(new Profession());
+
+                ordering.setId(resultSet.getLong("ordering.id"));
+                ordering.setOrderDateTime(resultSet.getTimestamp("ordering_date_time").toLocalDateTime());
+                ordering.setStatus(StatusEnum.valueOf(resultSet.getString("status").toUpperCase()));
+                ordering.getService().setId(resultSet.getLong("service_id"));
+                ordering.getEmployee().setId(resultSet.getLong("employee_id"));
+                ordering.getClient().setId(resultSet.getLong("client_id"));
+                ordering.setCreateTime(resultSet.getTimestamp("create_time").toLocalDateTime());
+                ordering.setUpdateTime(resultSet.getTimestamp("update_time").toLocalDateTime());
+                ordering.getService().setName(resultSet.getString("service.name"));
+                ordering.getService().setPrice(resultSet.getDouble("service.price"));
+                ordering.getService().setSpendTime(resultSet.getTime("service.spend_time"));
+                ordering.getEmployee().setName(resultSet.getString("employee.name"));
+                ordering.getEmployee().setSurname(resultSet.getString("employee.surname"));
+                ordering.getEmployee().setRating(resultSet.getDouble("employee.rating"));
+                ordering.getEmployee().getProfession().setId(resultSet.getLong("employee.profession_id"));
+                ordering.getEmployee().getProfession().setName(resultSet.getString("profession.name"));
+                ordering.getClient().setName(resultSet.getString("client.name"));
+                ordering.getClient().setSurname(resultSet.getString("client.surname"));
+                resultOrderings.add(ordering);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DBException("Failed to connect table ordering");
+        } finally {
+            close(resultSet);
+            close(statement);
+            close(connection);
+        }
+        return resultOrderings;
     }
 }

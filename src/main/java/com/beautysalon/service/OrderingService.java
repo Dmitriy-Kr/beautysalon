@@ -31,7 +31,11 @@ public class OrderingService implements Service<Ordering>{
 
     @Override
     public List<Ordering> findAll() throws ServiceException {
-        throw new ServiceException("This method has no useful body");
-//        return null;
+        try {
+            return orderingDao.findAll();
+        } catch (DBException e) {
+            e.printStackTrace();
+            throw new ServiceException("Failed to read from database");
+        }
     }
 }

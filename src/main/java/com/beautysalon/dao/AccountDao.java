@@ -8,7 +8,6 @@ import com.beautysalon.entity.RoleEnum;
 import java.sql.*;
 
 public class AccountDao extends AbstractDao implements BaseDao<Account> {
-    static final String URL = "jdbc:mysql://localhost:3306/beautysalon";
     static final String SQL_ADD_ACCOUNT
             = "INSERT account(login, password, role_id) VALUE(?, ?, (SELECT id FROM role WHERE name = ?))";
     static final String SQL_DELETE_ACCOUNT = "DELETE FROM account WHERE id = ?";

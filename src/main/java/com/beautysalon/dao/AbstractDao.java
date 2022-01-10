@@ -9,6 +9,7 @@ import java.sql.SQLException;
  * The class AstractDao contains simple basic methods for working with DB
  */
 public abstract class AbstractDao {
+
     void close(AutoCloseable autoCloseable){
         if (autoCloseable != null) {
             try {
